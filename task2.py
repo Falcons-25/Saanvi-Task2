@@ -29,8 +29,6 @@ def read_altitude_data():
                     data['altitude'].append(float(altitude))
                     with open(r"Ultrasonic.csv", 'a') as file:
                         print(time.strftime("%H:%M:%S,"), altitude, file=file)
-    except Exception as e:
-        print(f"Error reading altitude data: {e}")
 
 @app.callback(
     [Output("live-graph", "figure"), Output("real-time-value", "children")],
