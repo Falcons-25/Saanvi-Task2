@@ -1,7 +1,7 @@
 import serial
 
 try:
-    file = open(r"C:\Users\Saanvi\Desktop\Arduino IDE\ultrasonic_test\Ultrasonic.csv", "w", newline="")
+    file = open(r"Ultrasonic.csv", "w", newline="")
     ser = serial.Serial('COM6', 9600)
 
     while True:
