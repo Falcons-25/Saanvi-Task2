@@ -13,7 +13,7 @@ app.layout = html.Div(
     [
         html.H2("Real-Time Altitude Measurement"),
         dcc.Graph(id="live-graph", animate=True),
-        html.Div(id="real-time-value", style={"fontSize": "18px", "marginBottom": "20px"}),
+        html.Div(id="real-time-value"),
         dcc.Interval(id="graph-update", interval=1000, n_intervals=0),
     ]
 )
@@ -27,7 +27,7 @@ def read_altitude_data():
                     timestamp, altitude = line.split(',')
                     data['time'].append(time.strftime("%H:%M:%S"))
                     data['altitude'].append(float(altitude))
-                    with open(r"C:\Users\Saanvi\Desktop\Arduino IDE\ultrasonic_test\Ultrasonic.csv", 'a') as file:
+                    with open(r"Ultrasonic.csv", 'a') as file:
                         print(time.strftime("%H:%M:%S,"), altitude, file=file)
     except Exception as e:
         print(f"Error reading altitude data: {e}")
