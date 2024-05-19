@@ -9,11 +9,16 @@ app = dash.Dash(__name__)
 
 data = {'time': [], 'altitude': []}
 
+# Open the CSV file in write mode
+with open(r"C:\Users\Saanvi\Desktop\Arduino IDE\ultrasonic_test\Ultrasonic.csv", 'w', newline='') as file:
+    # Write the header row
+    file.write("Time,Altitude\n")
+
 app.layout = html.Div(
     [
         html.H2("Real-Time Altitude Measurement"),
+        html.Div(id="real-time-value", style={"fontSize": "18px", "marginBottom": "20px"}),
         dcc.Graph(id="live-graph", animate=True),
-        html.Div(id="real-time-value"),
         dcc.Interval(id="graph-update", interval=1000, n_intervals=0),
     ]
 )
@@ -27,8 +32,13 @@ def read_altitude_data():
                     timestamp, altitude = line.split(',')
                     data['time'].append(time.strftime("%H:%M:%S"))
                     data['altitude'].append(float(altitude))
+                    # Open the CSV file in append mode and write the data
                     with open(r"Ultrasonic.csv", 'a') as file:
-                        print(time.strftime("%H:%M:%S,"), altitude, file=file)
+                        file.write(f"{time.strftime('%H:%M:%S')},{altitude}\n")
+                  
+    except Exception as e:
+        print(f"Error reading altitude data: {e}")
+
 
 @app.callback(
     [Output("live-graph", "figure"), Output("real-time-value", "children")],
@@ -53,7 +63,15 @@ def update_graph(n):
         yaxis=dict(title='Altitude (feet)'),
     )
 
-    return fig, f"Latest Altitude: {latest_altitude} feet"
+    return fig, html.Span(f"Latest Altitude: {latest_altitude} feet", style={"fontSize": "1.0in"})
+
+# Define a function to write "User intended break" to the CSV file
+def write_user_break():
+    with open(r"Ultrasonic.csv", 'a') as file:
+        file.write("User intended break\n")
 
 if __name__ == "__main__":
-    app.run_server(debug=False)
+    try:
+        app.run(debug=False)
+    finally:
+        write_user_break()
